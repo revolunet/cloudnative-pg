@@ -1103,8 +1103,9 @@ func (r *ClusterReconciler) ensureInstancesAreCreated(
 		return ctrl.Result{}, nil
 	}
 
+	status := instancesStatus.InstancesReportingStatus()
 	if !cluster.IsNodeMaintenanceWindowInProgress() &&
-		instancesStatus.InstancesReportingStatus() != cluster.Status.ReadyInstances {
+		status != cluster.Status.ReadyInstances {
 		// A pod is not ready, let's retry
 		contextLogger.Debug("Waiting for node to be ready before attaching PVCs")
 		return ctrl.Result{RequeueAfter: 1 * time.Second}, ErrNextLoop
